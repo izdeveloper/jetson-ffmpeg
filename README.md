@@ -1,5 +1,5 @@
-# jetson-ffmpeg
-L4T Multimedia API for ffmpeg
+# jetson-ffmpeg for Jetson ORIN
+This patch support JetPack 5.1.2 and below 
 
 **1.build and install library**
 
