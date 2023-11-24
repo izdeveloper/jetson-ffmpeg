@@ -31,7 +31,7 @@ execute_process(
 message("Found Jetpack version: ${JETPACK_VERSION}")
 
 # check version jetpack
-if (JETPACK_VERSION VERSION_LESS "5.1.2")
+if (JETPACK_VERSION VERSION_LESS "5.0.0")
 	find_library(LIB_NVBUF nvbuf_utils PATHS /usr/lib/aarch64-linux-gnu/tegra)
 endif()
 
