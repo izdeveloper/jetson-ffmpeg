@@ -2,11 +2,13 @@ prefix=@CMAKE_INSTALL_PREFIX@
 exec_prefix=@CMAKE_INSTALL_PREFIX@
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
+tegra_libdir=/usr/lib/aarch64-linux-gnu/tegra
+cuda_libdir=/usr/local/cuda/lib64
 
 Name: @PROJECT_NAME@
 Description: @PROJECT_DESCRIPTION@
 Version: @PROJECT_VERSION@
 
 Requires:
-Libs: -L${libdir} -lnvmpi
+Libs: -L${libdir} -lnvmpi -L${tegra_libdir} -Wl,-rpath-link,${tegra_libdir} -L${cuda_libdir} -Wl,-rpath-link,${cuda_libdir}
 Cflags: -I${includedir} 
