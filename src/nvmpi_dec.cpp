@@ -587,10 +587,18 @@ nvmpictx* nvmpi_create_decoder(nvDecParam* param)
 
 	ret = ctx->dec->setFrameInputMode(0);
 	TEST_ERROR(ret < 0, "Error in decoder setFrameInputMode for NALU", ret);
-	
-	//TODO: create option to enable max performace mode (?)
-	//ret = ctx->dec->setMaxPerfMode(true);
-	//TEST_ERROR(ret < 0, "Error while setting decoder to max perf", ret);
+
+	//Disable Decoded Picture Buffer reordering to avoid a fixed multi-frame
+	//output latency (critical at low fps). Safe for streams without B-frames.
+	//Must be called after setFormat and before requestBuffers on any plane.
+	if(param->disable_dpb)
+	{
+		ret = ctx->dec->disableDPB();
+		TEST_ERROR(ret < 0, "Error in decoder disableDPB", ret);
+
+		ret = ctx->dec->setMaxPerfMode(1);
+		TEST_ERROR(ret < 0, "Error while setting decoder to max perf", ret);
+	}
 
 	ret = ctx->dec->output_plane.setupPlane(V4L2_MEMORY_USERPTR, 10, false, true);
 	TEST_ERROR(ret < 0, "Error while setting up output plane", ret);

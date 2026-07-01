@@ -58,6 +58,10 @@ static int nvmpi_init_decoder(AVCodecContext *avctx)
 		return AVERROR_UNKNOWN;
 	}
 	
+	//Low delay decoding: disable DPB reordering in the hardware decoder to
+	//avoid a fixed multi-frame output latency (very noticeable at low fps).
+	param.disable_dpb = !!(avctx->flags & AV_CODEC_FLAG_LOW_DELAY);
+
 	param.frame_pool_size = nvmpi_context->frame_pool_size;
 	if(param.frame_pool_size < OPT_frame_pool_size_MIN || param.frame_pool_size > OPT_frame_pool_size_MAX)
 	{

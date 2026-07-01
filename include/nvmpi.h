@@ -57,6 +57,7 @@ typedef struct _NVDECPARAM{
 	nvCodingType codingType;
 	nvPixFormat pixFormat;
 	nvSize resized;
+	int disable_dpb; //disable Decoded Picture Buffer reordering for low latency
 } nvDecParam;
 
 typedef struct _NVPACKET{
