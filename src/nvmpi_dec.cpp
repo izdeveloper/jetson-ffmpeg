@@ -724,6 +724,19 @@ int nvmpi_decoder_get_frame(nvmpictx* ctx,nvFrame* frame,bool wait)
 	int ret;
 	NVMPI_frameBuf* fb = ctx->framePool->dqFilledBuf();
 	if(!fb) return -1;
+
+	//Low-delay: the decoder pipeline can hold a backlog; a strict 1-in/1-out
+	//consumer would stay permanently behind it. Drop stale frames and keep
+	//only the newest decoded one (mirrors an appsink drop=true for live use).
+	if(wait)
+	{
+		NVMPI_frameBuf* next;
+		while((next = ctx->framePool->dqFilledBuf()))
+		{
+			ctx->framePool->qEmptyBuf(fb);
+			fb = next;
+		}
+	}
 	
 	ret = copyNvBufToFrame(ctx, fb, frame);
 	frame->timestamp=fb->timestamp;
